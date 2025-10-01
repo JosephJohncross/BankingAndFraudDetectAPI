@@ -1,9 +1,14 @@
 from fastapi import FastAPI
 from app.api.main import router
 from app.core.config import settings
-from app.core.logging import get_logger
+from contextlib import asynccontextmanager
+from app.core.database import init_db
 
-logger = get_logger()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await init_db()
+    yield
+    # Cleanup actions can be added here if necessary
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -11,6 +16,7 @@ app = FastAPI(
     docs_url=f"{settings.API_V1_STR}/docs",
     redoc_url=f"{settings.API_V1_STR}/redoc",
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    lifespan=lifespan
 )
 
 app.include_router(router, prefix=settings.API_V1_STR)
