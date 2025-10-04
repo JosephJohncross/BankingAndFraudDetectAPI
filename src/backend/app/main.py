@@ -1,8 +1,8 @@
 from fastapi import FastAPI
-from app.api.main import router
-from app.core.config import settings
+from backend.app.api.main import router
+from backend.app.core.config import settings
 from contextlib import asynccontextmanager
-from app.core.database import init_db
+from backend.app.core.database import init_db
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
